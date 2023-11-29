@@ -11,6 +11,7 @@ import org.testng.annotations.Test;
 //El locked_user no va a hacer que la prueba falle porque el algoritmo va a intentar loggearse con otro usuario.
 //El error_user no va a conseguir finalizar una compra, pero no va a tirar un fallo.
 //glitch_performance_user no va a tirar un timeout, el test va a quedar esperando a que pueda entrar.
+//El problem_user tira por consola que no puede finalizar una compra por falla de info personal.
 
 public class test {
     //public WebDriver driver = new FirefoxDriver();
@@ -18,6 +19,11 @@ public class test {
     @Test
     public void completePurchaseTest(){
         CompletePurchase test = new CompletePurchase(driver);
+        test.completePurchase();
+        test.completePurchase();
+        test.completePurchase();
+        test.completePurchase();
+        test.completePurchase();
         test.completePurchase();
     }
     @Test

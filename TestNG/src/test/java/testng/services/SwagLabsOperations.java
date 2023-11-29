@@ -1,13 +1,11 @@
 package testng.services;
 
-import com.beust.ah.A;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.testng.asserts.SoftAssert;
 
-import java.net.URISyntaxException;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +37,8 @@ public class SwagLabsOperations {
         wait.forElement(logInBox, driver);
 
         String randomUsername = chooseARandomUserName();
+        System.out.println("Logging in with..." + randomUsername);
+
         WebElement inputUsername = driver.findElement(By.xpath("//input[@id='user-name']"));
         inputUsername.sendKeys(randomUsername);
 
@@ -64,14 +64,11 @@ public class SwagLabsOperations {
                 true);
 
         softAssert.assertAll();
-        System.out.println("Logging in with..." + randomUsername);
     }
     private String chooseARandomUserName(){
-
         Random rand = new Random();
         String chosenUsername;
         return chosenUsername = usernames.get(rand.nextInt(usernames.size()));
-
     }
     public void addRandomItemsAndSeeCart(int numberOfItems){
         List<WebElement> inventory = driver.findElements(By.cssSelector(".pricebar button:only-of-type"));
@@ -116,10 +113,11 @@ public class SwagLabsOperations {
     public void checkout(){
         WebElement checkoutButton = driver.findElement(By.xpath("//button[@id='checkout']"));
         checkoutButton.click();
-        fillInPersonalDetails();
-        finishPurchase();
+        if(fillInPersonalDetails()){
+            finishPurchase();
+        }
     }
-    private void fillInPersonalDetails(){
+    private boolean fillInPersonalDetails(){
         By personalInfoForm = By.xpath("//div[@id='contents_wrapper']");
         wait.forElement(personalInfoForm, driver);
 
@@ -132,6 +130,17 @@ public class SwagLabsOperations {
         lastName.sendKeys("Mozilla");
         zipCode.sendKeys("15948");
         continueButton.click();
+
+        List<WebElement> errorMessage = driver.findElements(By.xpath("//div[@class='error-message-container error']"));
+        if (errorMessage.size() == 1){
+            softAssert.assertEquals(errorMessage.get(0).isDisplayed(), true);
+            System.out.println("There was an error when filling personal info...");
+            return false;
+        } else {
+            softAssert.assertEquals(errorMessage.size(), 0);
+        }
+        softAssert.assertAll();
+        return true;
     }
     private void finishPurchase(){
         By summary = By.xpath("//div[@class='summary_info']");
@@ -143,6 +152,7 @@ public class SwagLabsOperations {
         List<WebElement> okMessage = driver.findElements(By.cssSelector(".complete-header"));
         if (okMessage.size() == 1){
             softAssert.assertEquals(okMessage.get(0).getText(), "Thank you for your order!");
+            System.out.println("Completed a purchase...");
         } else {
             softAssert.assertEquals(okMessage.size(), 0);
             System.out.println("Unable to finish the purchase process.");

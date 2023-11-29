@@ -1,12 +1,7 @@
 package testng.tests;
 
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.testng.asserts.SoftAssert;
 import testng.services.SwagLabsOperations;
-
-import java.util.List;
 
 public class FillAndEmptyShoppingCart {
     private final WebDriver driver;
@@ -16,9 +11,13 @@ public class FillAndEmptyShoppingCart {
     }
     public SwagLabsOperations swagOps;
     public void fillAndEmptyShoppingCart(){
+        System.out.println("=============Fill and Empty Cart=============");
         swagOps.setUpDriver();
         swagOps.login();
+        System.out.println("Filling the cart...");
         swagOps.addRandomItemsAndSeeCart(3);
+        System.out.println("Emptying the cart...");
         swagOps.emptyCart();
+        System.out.println("Emptied the cart properly...");
     }
 }

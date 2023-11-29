@@ -10,8 +10,10 @@ public class LogInAndLogOut {
     private final SwagLabsOperations swagOps;
 
     public void inAndOut(){
+        System.out.println("============= Logging in and out=============");
         swagOps.setUpDriver();
         swagOps.login();
         swagOps.logOut();
+        System.out.println("Successful log out!");
     }
 }
