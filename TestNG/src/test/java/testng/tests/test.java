@@ -22,7 +22,8 @@ public class test {
     }
     @Test
     public void inAndOut(){
-
+        LogInAndLogOut test = new LogInAndLogOut(driver);
+        test.inAndOut();
     }
     @AfterTest
     public void quit(){

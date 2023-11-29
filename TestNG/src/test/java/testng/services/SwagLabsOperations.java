@@ -43,13 +43,15 @@ public class SwagLabsOperations {
         softAssert.assertEquals(
                 driver.findElement(By.xpath("//body/div[@id='root']/div[@id='page_wrapper']/div[@id='contents_wrapper']/div[2]")).isDisplayed(),
                 true);
+        softAssert.assertAll();
     }
     public void addRandomItemsAndSeeCart(int numberOfItems){
         List<WebElement> inventory = driver.findElements(By.cssSelector(".pricebar button:only-of-type"));
 
         softAssert.assertEquals(inventory.size(), 6);
-        softAssert.assertEquals(findAndSelectRandomItems(inventory, numberOfItems), numberOfItems);
+        softAssert.assertEquals(findAndSelectRandomItems(inventory, numberOfItems).size(), numberOfItems);
 
+        softAssert.assertAll();
         seeCart();
     }
     private void seeCart(){
@@ -59,7 +61,6 @@ public class SwagLabsOperations {
         By cartList = By.xpath("//div[@class='cart_list']");
         wait.forElement(cartList,driver);
 
-
     }
     public void emptyCart(){
         List<WebElement> cart = driver.findElements(By.cssSelector(".item_pricebar button:only-of-type"));
@@ -68,6 +69,7 @@ public class SwagLabsOperations {
             cart.get(i).click();
         }
         softAssert.assertEquals(driver.findElements(By.xpath("//div[@class='cart_item']")).size(), 0);
+        softAssert.assertAll();
     }
     private List<WebElement> findAndSelectRandomItems(List<WebElement> inventory, int picks){
         List<WebElement> items = new ArrayList<>();
@@ -111,6 +113,28 @@ public class SwagLabsOperations {
         finishButton.click();
         String okMessage = driver.findElement(By.cssSelector(".complete-header")).getText();
         softAssert.assertEquals(okMessage, "Thank you for your order!");
+
+        softAssert.assertAll();
+    }
+    public void logOut(){
+        By pageContents = By.xpath("//div[@id='contents_wrapper']");
+        wait.forElement(pageContents, driver);
+
+        WebElement burgerMenuButton = driver.findElement(By.xpath("//button[@id='react-burger-menu-btn']"));
+        burgerMenuButton.click();
+
+        WebElement logOutButton = driver.findElement(By.xpath("//a[@id='logout_sidebar_link']"));
+        logOutButton.click();
+
+        pageContents = By.xpath("//div[@class='login_container']");
+        wait.forElement(pageContents, driver);
+
+        WebElement logInBox = driver.findElement(By.xpath("//div[@class='login-box']"));
+        softAssert.assertEquals(logInBox.isDisplayed(), true);
+        softAssert.assertAll();
+    }
+    public void quit(){
+        driver.quit();
     }
 
 }

@@ -14,8 +14,8 @@ public class CompletePurchase {
         this.driver = driver;
         swagOps = new SwagLabsOperations(this.driver);
     }
-    public SwagLabsOperations swagOps;
-    public FluentWaitForElement wait = new FluentWaitForElement();
+    private SwagLabsOperations swagOps;
+    private FluentWaitForElement wait = new FluentWaitForElement();
     public void completePurchase(){
         swagOps.setUpDriver();
         swagOps.login();
@@ -29,6 +29,6 @@ public class CompletePurchase {
         softAssert.assertEquals(
                 driver.findElement(By.xpath("//h2[normalize-space()='Thank you for your order!']")).getText(),
                 "Thank you for your order!");
-
+        softAssert.assertAll();
     }
 }
