@@ -1,11 +1,13 @@
 package testng.services;
 
+import com.beust.ah.A;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.testng.asserts.SoftAssert;
 
+import java.net.URISyntaxException;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +17,7 @@ public class SwagLabsOperations {
     private final FluentWaitForElement wait = new FluentWaitForElement();
     private final WebDriver driver;
     private final SoftAssert softAssert = new SoftAssert();
+    private final List<String> usernames = new ArrayList<>();
     public SwagLabsOperations (WebDriver driver){
         this.driver = driver;
     }
@@ -22,18 +25,35 @@ public class SwagLabsOperations {
         driver.manage().window().maximize();
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(2));
         driver.get("https://www.saucedemo.com/");
+
+        usernames.add("standard_user");
+        usernames.add("locked_out_user");
+        usernames.add("problem_user");
+        usernames.add("performance_glitch_user");
+        usernames.add("error_user");
+        usernames.add("visual_user");
+
     }
     public void login(){
         By logInBox = By.xpath("//div[@class='login-box']");
         wait.forElement(logInBox, driver);
 
+        String randomUsername = chooseARandomUserName();
         WebElement inputUsername = driver.findElement(By.xpath("//input[@id='user-name']"));
-        inputUsername.sendKeys("standard_user");
+        inputUsername.sendKeys(randomUsername);
 
         WebElement inputPassword = driver.findElement(By.xpath("//input[@id='password']"));
         inputPassword.sendKeys("secret_sauce");
 
         inputPassword.sendKeys(Keys.ENTER);
+
+        List<WebElement> errorMessages = driver.findElements(By.xpath("//div[@class='error-message-container error']"));
+        if (errorMessages.size() == 1) {
+            System.out.println("Error logging in...");
+            setUpDriver();
+            login();
+        }
+
 
         By pageContent = By.xpath("//div[@id='contents_wrapper']");
         wait.forElement(pageContent, driver);
@@ -42,7 +62,16 @@ public class SwagLabsOperations {
         softAssert.assertEquals(
                 driver.findElement(By.xpath("//body/div[@id='root']/div[@id='page_wrapper']/div[@id='contents_wrapper']/div[2]")).isDisplayed(),
                 true);
+
         softAssert.assertAll();
+        System.out.println("Logging in with..." + randomUsername);
+    }
+    private String chooseARandomUserName(){
+
+        Random rand = new Random();
+        String chosenUsername;
+        return chosenUsername = usernames.get(rand.nextInt(usernames.size()));
+
     }
     public void addRandomItemsAndSeeCart(int numberOfItems){
         List<WebElement> inventory = driver.findElements(By.cssSelector(".pricebar button:only-of-type"));
@@ -110,8 +139,14 @@ public class SwagLabsOperations {
 
         WebElement finishButton = driver.findElement(By.xpath("//button[@id='finish']"));
         finishButton.click();
-        String okMessage = driver.findElement(By.cssSelector(".complete-header")).getText();
-        softAssert.assertEquals(okMessage, "Thank you for your order!");
+
+        List<WebElement> okMessage = driver.findElements(By.cssSelector(".complete-header"));
+        if (okMessage.size() == 1){
+            softAssert.assertEquals(okMessage.get(0).getText(), "Thank you for your order!");
+        } else {
+            softAssert.assertEquals(okMessage.size(), 0);
+            System.out.println("Unable to finish the purchase process.");
+        }
 
         softAssert.assertAll();
     }

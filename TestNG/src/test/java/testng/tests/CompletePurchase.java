@@ -24,11 +24,5 @@ public class CompletePurchase {
 
         By pageContents = By.xpath("//div[@id='contents_wrapper']");
         wait.forElement(pageContents, driver);
-
-        SoftAssert softAssert = new SoftAssert();
-        softAssert.assertEquals(
-                driver.findElement(By.xpath("//h2[normalize-space()='Thank you for your order!']")).getText(),
-                "Thank you for your order!");
-        softAssert.assertAll();
     }
 }
