@@ -20,11 +20,6 @@ public class test {
     public void completePurchaseTest(){
         CompletePurchase test = new CompletePurchase(driver);
         test.completePurchase();
-        test.completePurchase();
-        test.completePurchase();
-        test.completePurchase();
-        test.completePurchase();
-        test.completePurchase();
     }
     @Test
     public void fillAndEmptyCart(){
