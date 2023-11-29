@@ -4,7 +4,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.testng.Assert;
 import org.testng.asserts.SoftAssert;
 
 import java.time.Duration;
@@ -13,9 +12,9 @@ import java.util.List;
 import java.util.Random;
 
 public class SwagLabsOperations {
-    private FluentWaitForElement wait = new FluentWaitForElement();
+    private final FluentWaitForElement wait = new FluentWaitForElement();
     private final WebDriver driver;
-    private SoftAssert softAssert = new SoftAssert();
+    private final SoftAssert softAssert = new SoftAssert();
     public SwagLabsOperations (WebDriver driver){
         this.driver = driver;
     }
@@ -65,8 +64,8 @@ public class SwagLabsOperations {
     public void emptyCart(){
         List<WebElement> cart = driver.findElements(By.cssSelector(".item_pricebar button:only-of-type"));
 
-        for(int i = 0; i < cart.size(); i++){
-            cart.get(i).click();
+        for (WebElement webElement : cart) {
+            webElement.click();
         }
         softAssert.assertEquals(driver.findElements(By.xpath("//div[@class='cart_item']")).size(), 0);
         softAssert.assertAll();
@@ -132,9 +131,6 @@ public class SwagLabsOperations {
         WebElement logInBox = driver.findElement(By.xpath("//div[@class='login-box']"));
         softAssert.assertEquals(logInBox.isDisplayed(), true);
         softAssert.assertAll();
-    }
-    public void quit(){
-        driver.quit();
     }
 
 }
