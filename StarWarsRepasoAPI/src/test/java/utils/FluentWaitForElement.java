@@ -9,7 +9,7 @@ import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Wait;
 
 import java.time.Duration;
-
+//Es un fluent wait. Lo uso en WikipediaServices para poder esperar que los elementos necesarios sean visibles.
 public class FluentWaitForElement {
     public void forElement(By expectedElement, WebDriver driver){
         Wait<WebDriver> wait = new FluentWait<>(driver)
